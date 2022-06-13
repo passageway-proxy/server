@@ -1,0 +1,24 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "Server used for managing subdomains and IDs",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "ts-node src/index.js",
+    "build": "tsc src"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/passageway-proxy/server.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/passageway-proxy/server/issues"
+  },
+  "homepage": "https://github.com/passageway-proxy/server#readme",
+  "dependencies": {
+    "ts-node": "^10.8.1",
+    "typescript": "^4.7.3"
+  }
+}
