@@ -16,7 +16,7 @@ export default (opt: any = {}) => {
             return;
         }
 
-        
+
     });
 
     return server;
