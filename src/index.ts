@@ -1,9 +1,17 @@
 import createServer from "./server";
 
 const main = () => {
-    const server = createServer();
+    const server_info = {
+        port: 3000,
+        host: "vcap.me"
+    }
 
-    server.listen(3000, "vcap.me")
+    const server = createServer({
+        domain: server_info.host,
+        port: server_info.port
+    });
+
+    server.listen(server_info.port, server_info.host)
 }
 
 main()

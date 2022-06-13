@@ -3,7 +3,7 @@ import net from 'net';
 
 const DEFAULT_MAX_SOCKETS = 10;
 
-class TunnelAgent extends Agent {
+export default class extends Agent {
 
     private connectedSockets: Number = 0;
     private maxTcpSockets: Number = DEFAULT_MAX_SOCKETS;
@@ -39,8 +39,20 @@ class TunnelAgent extends Agent {
         }
         this.started = true;
 
-        server.on('close', this._onClose.bind(this));
-        server.on('connection', this._onConnection.bind(this));
+        server.on('close', () => {
+            this.closed = true;
+            // flush any waiting connections
+            for (const conn of this.waitingCreateConn) {
+                conn(new Error('closed'), null);
+            }
+    
+            this.waitingCreateConn = [];
+    
+            // @ts-ignore
+            this.emit('end');
+        });
+
+        server.on('connection', this._onConnection);
         server.on('error', (err: any) => {
             if (err.code == 'ECONNRESET' || err.code == 'ETIMEDOUT') {
                 return;
@@ -62,19 +74,6 @@ class TunnelAgent extends Agent {
                 });
             });
         });
-    }
-
-    _onClose() {
-        this.closed = true;
-        // flush any waiting connections
-        for (const conn of this.waitingCreateConn) {
-            conn(new Error('closed'), null);
-        }
-
-        this.waitingCreateConn = [];
-
-        // @ts-ignore
-        this.emit('end');
     }
 
     // new socket connection from client for tunneling requests to client
